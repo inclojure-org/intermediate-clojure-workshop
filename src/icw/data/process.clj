@@ -7,9 +7,9 @@
 
 ;; Reading and processing data from resources/data/albumlist.csv
 
-(def album-lines (drop 1
-                       (line-seq (clojure.java.io/reader
-                                  "resources/data/albumlist.csv"))))
+(defonce album-lines (drop 1
+                           (line-seq (clojure.java.io/reader
+                                      "resources/data/albumlist.csv"))))
 
 (comment
   (first album-lines))
@@ -42,7 +42,7 @@
        "Psychedelic Rock"]]))
 
 (comment
-  (map parse-line album-lines))
+  (take 2 (map parse-line album-lines)))
 
 
 (defn line-vec->line-map
@@ -98,7 +98,9 @@
   (jdbc/init-db)
   (let [albums (line-xs->album-xs album-lines)]
     (doseq [album albums]
-      (jdbc/insert! album))))
+      (jdbc/insert! (update-in album
+                               [:subgenre]
+                               #(cs/join "," %))))))
 
 ;; Check http://localhost:6789/albums
 
@@ -128,6 +130,9 @@
                         #_FIXME))))
 
 (comment (= (take 5 (line-xs->albums-xs-before album-lines 1987))
+(comment (= (take 5 (map (juxt :year :album)
+                         (line-xs->albums-xs-before 1987
+                                                    album-lines)))
             '([1967 "Sgt. Pepper's Lonely Hearts Club Band"]
               [1966 "Pet Sounds"]
               [1966 "Revolver"]

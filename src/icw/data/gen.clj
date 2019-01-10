@@ -32,7 +32,7 @@
                         "\"")]))
        (gen/sample-seq album-gen)
        (mapcat (fn [year]
-                 (repeat (rand-nth (range 10 40))
+                 (repeat (rand-nth (range 10 15))
                          year))
                (drop 2040 (range)))
        (drop 501 (range))))

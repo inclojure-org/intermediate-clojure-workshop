@@ -87,11 +87,11 @@
 ;; Objects:1 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/java-interop/intro.org::*Objects][Objects:2]]
-(clojure.pprint/pprint (do (datafy sample-point)))
+(comment (clojure.pprint/pprint (do (datafy sample-point))))
 ;; Objects:2 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/java-interop/intro.org::*Objects][Objects:3]]
-(clojure.pprint/pprint (do (bean sample-point)))
+(comment (clojure.pprint/pprint (do (bean sample-point))))
 ;; Objects:3 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/java-interop/intro.org::*Objects][Objects:4]]
