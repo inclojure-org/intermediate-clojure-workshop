@@ -175,14 +175,15 @@ x
 (send agent-a inc)
 @agent-a
 
-(send agent-a (fn [n]
-                (/ n 0)))
+(comment
+  (send agent-a (fn [n]
+                  (/ n 0)))
 
-(agent-error agent-a)
-(restart-agent agent-a 1)
+  (agent-error agent-a)
+  (restart-agent agent-a 1)
 
-@agent-a
-(send agent-a inc)
+  @agent-a
+  (send agent-a inc))
 
 ;; Agents are part of STM and send is parked work unless transaction is
 ;; complete
@@ -364,7 +365,7 @@ x
                                  #(cs/join "," %)))))))
 
 
-(time (populate-db))
+(comment (time (populate-db)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Take home exercise

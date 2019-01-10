@@ -2,10 +2,10 @@
   (:require [icw.system :as system]
             [icw.data.process]
             [icw.data.process-faster]
-            [icw.java-interop.intro]
-            [icw.search.reader]
+            ;; [icw.java-interop.intro]
+            ;; [icw.search.reader]
             [icw.async.intro]
-            [ics.async.rlsc]
+            [icw.async.rlsc]
             [icw.web.core :as web])
   (:gen-class))
 
@@ -45,7 +45,7 @@ icw.data.process/populate-db
 ;; Chapter 3 - Java interop
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-'icw.java-interop.intro
+;; 'icw.java-interop.intro
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -59,7 +59,7 @@ icw.data.process/populate-db
 web/app
 
 ;; We need fix search
-icw.search.reader/search
+;; icw.search.reader/search
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Chapter 5 - core.async introduction
