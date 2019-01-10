@@ -2,6 +2,7 @@
   (:require [clojure.string :as cs]
             [icw.java-interop.jdbc :as jdbc]
             [clojure.data.csv :as csv]
+            [clojure.string :as cs]
             [icw.data.gen :as data-gen]))
 
 
@@ -129,7 +130,6 @@
                    (map #_FIXME
                         #_FIXME))))
 
-(comment (= (take 5 (line-xs->albums-xs-before album-lines 1987))
 (comment (= (take 5 (map (juxt :year :album)
                          (line-xs->albums-xs-before 1987
                                                     album-lines)))
