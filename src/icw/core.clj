@@ -1,7 +1,7 @@
 (ns icw.core
   (:require [icw.system :as system]
             [icw.data.process]
-            [icw.data.faster-process]
+            [icw.data.process-faster]
             [icw.web.core :as web]))
 
 
@@ -22,4 +22,4 @@ web/app
 
 ;; Can we make make populate-db faster?
 
-icw.data.faster-process
+'icw.data.process-faster
