@@ -74,3 +74,26 @@ icw.search.reader/search
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 'icw.async.rlsc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Summary
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; How to choose libraries and build projects ???
+
+;; Start from smallest unit of data
+;; Build transformations based on your case
+;; Deal with constraints
+;; Bring in databases and dependencies at very last
+
+
+;; When choosing libraries
+;; It should work with immutable data structure
+;; It should produce immutable data structure
+;; It should produce lazy sequences when it can
+;; Prefer libraries over frameworks
+;; It shouldn't use dynamic vars
+
+;; Do concurrency when you actually have to
+;; Adding concurrency primitives does add complexity to the system
+;; When in doubt go for the simplest construct
