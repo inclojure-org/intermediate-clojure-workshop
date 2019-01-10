@@ -355,7 +355,7 @@ x
 
   (with-open [rdr (clojure.java.io/reader "resources/data/albumlist.csv")]
     (let [lines (line-seq rdr)
-          albums (idp/source->album-xs idp/album-source)]
+          albums (idp/line-xs->album-xs idp/album-lines)]
       (doseq [album albums]
         ;; Running it in another thread will help
         (jdbc/insert! album)))))
