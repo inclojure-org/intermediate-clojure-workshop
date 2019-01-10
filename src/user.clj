@@ -1,3 +1,4 @@
+;; [[file:~/github/intermediate-clojure-workshop/content/user.org::*User%20namespace%20-%20defaults][User namespace - defaults:1]]
 (ns user
     (:require [clojure.pprint :as pp]
               [clojure.datafy :refer [datafy]]
@@ -7,3 +8,4 @@
 
 (comment
   (start!))
+;; User namespace - defaults:1 ends here
