@@ -374,3 +374,7 @@ x
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Caveats
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Limited threadpool for agent and future
+
+;; shutdown-agents needs to be called while exiting a service
