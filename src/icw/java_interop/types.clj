@@ -4,10 +4,15 @@
             [clojure.datafy :refer [datafy]])
   (:import [java.util ArrayList Collections]
            [java.util.concurrent Callable ForkJoinPool]))
+
+(defn java-interfaces [class-list]
+  (->> class-list
+       (map #(.getName %))
+       (filter #(re-find #"^java\." %))))
 ;; The Preamble:1 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/java-interop/types.org::*A%20core%20function][A core function:1]]
-(-> + class ancestors)
+(-> + class ancestors java-interfaces)
 ;; A core function:1 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/java-interop/types.org::*Map][Map:1]]
