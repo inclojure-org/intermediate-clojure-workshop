@@ -45,7 +45,7 @@
 
 (defn insert!
   [row]
-  (Thread/sleep (rand-int 100))
+  (Thread/sleep (rand-int 20))
   (jdbc/insert! hsqldb
                 :albums
                 row))
