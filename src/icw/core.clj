@@ -1,6 +1,7 @@
 (ns icw.core
   (:require [icw.system :as system]
             [icw.data.process]
+            [icw.data.faster-process]
             [icw.web.core :as web]))
 
 
@@ -17,14 +18,8 @@
 ;; Where is it located ? Let's jump there
 web/app
 
-;; How do we load the data ?
-icw.data.process/populate-db
-
-
 ;; Chapter 2 - Concurrency
 
 ;; Can we make make populate-db faster?
 
-icw.data.process/populate-db
-
-;; Chapter 3 -
+icw.data.faster-process
