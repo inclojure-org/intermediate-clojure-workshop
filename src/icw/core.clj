@@ -2,7 +2,8 @@
   (:require [icw.system :as system]
             [icw.data.process]
             [icw.data.process-faster]
-            [icw.web.core :as web]))
+            [icw.web.core :as web])
+  (:gen-class))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Introduction
@@ -13,6 +14,7 @@
 (comment
   (system/start!))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Chapter 1 - Lazy sequences
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21,6 +23,8 @@
 
 ;; Where is it located ? Let's jump there
 web/app
+
+icw.data.process/populate-db
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Chapter 2 - Concurrency
