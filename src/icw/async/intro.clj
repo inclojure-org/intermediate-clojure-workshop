@@ -1,174 +1,101 @@
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Preamble][Preamble:1]]
-(ns icw.async.intro
-  (:require [icw.common :refer :all]
-            [clojure.core.async :as a
-             :refer [go go-loop chan close!
-                     <! >! <!! >!! take! put!
-                     alts! alt! thread
-                     buffer sliding-buffer dropping-buffer]]))
-;; Preamble:1 ends here
+(ns icw.async.chapter1
+  (:require [clojure.core.async :refer
+             [go chan <! >! >!! <!! alts!! close! put! take! timeout]]
+            [icw.common :refer [pprint]]))
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Put,%20and%20then%20take.][Put, and then take.:1]]
-; A simple put, followed by a take
-(let [ch (chan)]
-  (put! ch "hello, orderly world!")
-  (take! ch pprint))
-;; Put, and then take.:1 ends here
+;; Core async's most basic construct is channel
+;; It has two operations on it put! and take!
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Take,%20and%20put?][Take, and put?:1]]
-(let [ch (chan)]
-
-  ; What happens when we take from an empty channel?
-  (take! ch pprint)
-
-  (pprint "Now, we put!")
-  ; Now we put!, followed by a take!
-  (put! ch "hello, world!")
-
-  ; Retry this let-block by commenting the first take!
-  (take! ch pprint))
-;; Take, and put?:1 ends here
-
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Pushing%20the%20limits%20-%20put%20and%20take][Pushing the limits - put and take:1]]
-(let [num-msgs 1025
-      ch (chan)]
-  (doseq [i (range num-msgs)]
-    (put! ch i))
-
-  (doseq [i (range num-msgs)]
+(comment
+  (let [ch (chan)]
+    (put! ch "hello, orderly world!")
     (take! ch pprint)))
-;; Pushing the limits - put and take:1 ends here
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Add%20a%20cushion][Add a cushion:1]]
-(let [chan-buf-sz 32
-      put-limit   1024
-      take-limit  64
-      ;; Try using any of buffer, dropping-buffer and sliding-buffer
-      ch          (chan (buffer chan-buf-sz))]
 
-  (doseq [i (range put-limit)]
-    (put! ch i))
+;; What can you do with it?
 
-  (doseq [i (range take-limit)]
-    (take! ch pprint)))
-;; Add a cushion:1 ends here
+;; One process talking to other
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Let's%20go!][Let's go!:1]]
-(let [ch        (chan 32)
-      lck       (Object.)
-      pprint    (fn [message] (pprint (str "[" (.getName (Thread/currentThread)) "] " message)))
-      my-pprint (fn [msg] (locking lck (pprint msg)))]
-  ;my-pprint pprint
+;; Process 1 -----> chan ----> Process 2
 
-  (go
-    (my-pprint (<! ch))
-    (my-pprint "Done handling the important stuff. Now, I rest."))
+;; In context of `go`, put is `>!` and take is `<!`
+(comment
+  (let [c (chan)]
+    ;; process #1
+    ;; push 1 to channel
+    (go (>! c 1))
 
-  (my-pprint "We need a quick nap. Sleeping...")
-  (Thread/sleep 2500)
-  (go (>! ch "[Message] Did this message make you wait?"))
 
-  (my-pprint "Now, we are done. Bye!"))
-;; Let's go!:1 ends here
+    ;; process #2
+    ;; get something from channel
+    (go (pprint "Hello from process #2 " (<! c)))))
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Going,%20going,%20go-loop!][Going, going, go-loop!:1]]
-; Let's pollute the namespace, since we need a handle to work with.
-(def looping-ch
-  (let [ctl-ch (chan)]                                      ; The channel we deal with outside of this block.
-    (go-loop [msg (<! ctl-ch)]
-      (condp = msg
-        :quit (do
-                (pprint "I quit!")
-                (close! ctl-ch))
-        (do (pprint "We have a new message.")
-            (pprint msg)
-            (pprint "Onto the next one! Until then, I sleep...")
-            (recur (<! ctl-ch)))))
-    ctl-ch))
 
-; Evaluate the next one as many times as you wish.
-(put! looping-ch "hello")
 
-; Evaluate the following, and observe. Then put! more messages and observe.
-(put! looping-ch :quit)
+;; It can interoperate between a thread and go block
 
-; If you dislike the pollution, evaluate the line below
-#_(ns-unmap *ns* 'looping-ch)
-;; Going, going, go-loop!:1 ends here
+(comment
+  (let [c (chan)]
+    ;; process #1
+    (future (pprint "Fetching data from Mongodb")
+            (Thread/sleep 400)
+            (>!! c {:data "hello world"})
+            (pprint "Fetching data from Mongodb completed"))
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*What's%20async%20without%20multiple%20actors?][What's async without multiple actors?:1]]
-(let [ch1       (chan)
-      ch2       (chan)
-      out-ch    (chan 1)
-      priority? true]                                       ;; Try variations
-  (go (let [[val port] (alts! [ch1 ch2 [out-ch "Out!"]] :priority priority?)]
-        (condp = port
-          ch1 (pprint "We had an input '" val "' on ch1")
-          ch2 (pprint "We had an input '" val "' on ch2")
-          out-ch (pprint "Nothing came in. So, we sent out on out-ch"))))
+    ;; process #2
+    (go (pprint "Data from mongodb #2 " (<! c)))))
 
-  (if (zero? (rand-int 2))
-    (put! ch1 "Hello, ch1")
-    (put! ch2 "Hello, ch2")))
-;; What's async without multiple actors?:1 ends here
+;; Process 1 ---
+;;              \
+;;               ----- chan --- Process 3
+;;              /
+;; Process 2 ---
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*And,%20what's%20clojure%20without%20convenience?][And, what's clojure without convenience?:1]]
-(let [ch1       (chan)
-      ch2       (chan)
-      out-ch    (chan 1)
-      priority? false]                                      ;; Try variations
+(comment
+  (let [c1 (chan)
+        c2 (chan)]
 
-  (go (alt!
-        ch1 ([val] (pprint "We had an input \"" val "\" on ch1"))
-        ch2 ([val] (pprint "We had an input \"" val "\" on ch2"))
-        ;; Caution - It's a vector of vectors below.
-        [[out-ch "Out!"]] ([_] (pprint "Nothing came in. So, we sent out on out-ch"))
-        :priority priority?))
-  (put! ch1 "Hello, ch1"))
-;; And, what's clojure without convenience?:1 ends here
+    ;; process #1
+    (future (let [time (rand-int 1000)]
+              (Thread/sleep time)
+              (>!! c1 {:data (str "hello world from process 1 time " time)})))
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/intro.org::*Where%20do%20the%20async%20'processes'%20run?][Where do the async 'processes' run?:1]]
-(thread (pprint "Hello"))
+    ;; process #2
+    (future (let [time (rand-int 1000)]
+              (Thread/sleep time)
+              (>!! c2 {:data (str "hello world from process 2 time " time)})))
 
-(go (pprint "Hello"))
+    ;; process #3 how do we get output of the fastest result
+    (pprint (<!! c1))
+    (pprint (<!! c2))))
 
-(let [c (chan)]
-  (go (pprint "In value: " (<! c)))
-  (pprint "Well, let's do something. Send a value to the channel.")
-  (go (>! c "HereIsAChannelMessage")))
 
-(let [c (chan 8)]
-  (put! c "Hello, put!"
-        (fn [& args]
-          (pprint "On put! callback"))
-        false)
-  (take! c (fn [& [args]] (pprint "On take! callback" args)) false))
+;; Alts!!
+(comment
+  (let [c1 (chan)
+        c2 (chan)]
 
-(let [put-take-counter (atom 0)
-      c                (chan (sliding-buffer 128))
-      count++          (fn [] (swap! put-take-counter inc))]
+    ;; process #1
+    (future (let [time (rand-int 1000)]
+              (Thread/sleep time)
+              (>!! c1 {:data (str "hello world from process 1 time " time)})
+              (pprint "released process 1!")))
 
-  (def on-my-thread true)
-  (def on-core-async-thread false)
+    ;; process #2
+    (future (let [time (rand-int 1000)]
+              (Thread/sleep time)
+              (>!! c2 {:data (str "hello world from process 2 time " time)})
+              (pprint "released process 2!")))
 
-  (defn put-cb [v]
-    (pprint "put! = " v))
-  (defn take-cb [x]
-    (pprint "take! = " x))
-  (defn put-counter! [on-thread?]
-    (put! c (count++) put-cb on-thread?))
-  (defn take-counter! [on-thread?]
-    (take! c take-cb on-thread?))
+    ;; process #3
+    (let [[v c] (alts!! [c1 c2 t])]
+      (pprint v))))
 
-  (comment
-    ;; Mix the put-s and take-s. Letting one run ahead of the other.
-    ;; Observe where (the thread) the prints happen.
-    (put-counter! on-core-async-thread)
-    (take-counter! on-core-async-thread)
-    (take-counter! on-my-thread)
-    (doseq [_ (range 1024)]
-      (put-counter! on-core-async-thread))
-    (doseq [_ (range 128)]
-      (take-counter! on-my-thread))))
 
-;; Where do the async 'processes' run?:1 ends here
+
+
+;; Exercise - 1
+;; Modify alts! example. If both requests take more than 300msec print
+;; "Wubalubadubdub" and close both request channels
+;; Hint - timeout generates a channel which will close after given time
+;; On closing the channel it gets nil as the final value

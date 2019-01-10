@@ -23,7 +23,7 @@
          (cs/join \,
                   [id
                    (str year)
-                   (cs/join \
+                   (cs/join \space
                             album-xs)
                    genre
                    (str "\""
