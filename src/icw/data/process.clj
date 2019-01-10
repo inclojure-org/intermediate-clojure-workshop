@@ -96,7 +96,7 @@
 (defn populate-db
   []
   (jdbc/init-db)
-  (let [albums (source->album-xs album-lines)]
+  (let [albums (line-xs->album-xs album-lines)]
     (doseq [album albums]
       (jdbc/insert! album))))
 
