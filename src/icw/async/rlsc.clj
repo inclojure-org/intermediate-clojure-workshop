@@ -53,42 +53,51 @@
   (shutdown! [this]))
 ;; The API:1 ends here
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/rlsc.org::*Outline][Outline:1]]
-(defrecord RLSC
-  [in-ch out-ch process-fn time-gap-ms burst-count]
-  ;; Any internal state to track??
-
+;; [[file:~/github/intermediate-clojure-workshop/content/async/rlsc.org::*Solution][Solution:1]]
+(defrecord RLSC [in-ch out-ch process-fn time-gap-ms burst-count
+                 -tokens -shutdown?]
   RLSCController
-  ; We need two go processes
-  ; 1. One that tracks consumption and burst-rate limits
-  ; 2. The other processes messages per the policy
   (start! [_]
+
+    ; An independent go process that tracks appropriate increments to the
+    ; burst-count
     (go-loop []
-      #_("A periodic process that increments tokens"))
-    (go-loop [#_v #_("read a message")]
-      "If we have capacity process, else simply pass on to the output channel"
-      (recur #_("read next message if no shutdown signal"))))
+      (<! (timeout time-gap-ms))
+      (counter++ -tokens)
+      (if-not @-shutdown?
+        (recur)))
 
-  ; Policy change at run-time
-  ; This needs to be conveyed to the go-blocks
-  ;  which help us conform to policy
-  (modify-burst! [this new-burst-count]
-    #_("update the burst-count")
-    #_("update tokens available"))
+    (go-loop [v (<! in-ch)]
+      (if (pos? (counter -tokens))
+        (do
+          "We have capacity. So, process the message on another thread so we do not block
+          any thread in the core.async pool, and decrement available capacity by one."
+          (thread (>!! out-ch (process-fn v)))
+          (counter-- -tokens))
+        (do
+          "No spare capacity. Short-circuit the inward message to the next sink."
+          (>! out-ch v)))
+      (if-not @-shutdown?
+        (recur (<! in-ch)))))
 
-  ; Stop all transformation
-  ; Signal the go-block logic to clamp down on transformations.
+  (modify-burst! [_ new-burst-count]
+    (reset! burst-count new-burst-count)
+    (update-bound! -tokens new-burst-count))
+
+  ; Special case of modify-burst!
   (zero! [this]
-    #_("special case of modify-burst! Is it?"))
+    (modify-burst! this 0))
 
-  ; Stop the go blocks.
-  ; How do we communicate with the go-blocks started in another place?
-  (shutdown! [this]))
+  ; Reset our check variable and hope for the best.
+  (shutdown! [_]
+    (reset! -shutdown? true)))
 
 (defn new-rate-limiter [in-ch out-ch process-fn time-gap-ms burst-count]
   (->RLSC in-ch out-ch process-fn time-gap-ms
-          (atom burst-count)))
-;; Outline:1 ends here
+          (atom burst-count)
+          (new-counter burst-count)
+          (atom false)))
+;; Solution:1 ends here
 
 ;; [[file:~/github/intermediate-clojure-workshop/content/async/rlsc.org::*Test%20runs][Test runs:1]]
 (comment

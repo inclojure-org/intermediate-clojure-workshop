@@ -30,5 +30,5 @@
   (r/search @index field query-term (standard-analyzer)))
 
 (comment
-  (search :subgenre "classic rock"))
+  (search :album "pepper's"))
 ;; The Preamble:1 ends here

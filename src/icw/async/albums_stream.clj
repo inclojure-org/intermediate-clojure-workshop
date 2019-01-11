@@ -6,7 +6,7 @@
             [icw.data.gen :as data-gen]))
 ;; Preamble:1 ends here
 
-;; [[file:~/github/intermediate-clojure-workshop/content/async/albums_stream.org::*Outline][Outline:2]]
+;; [[file:~/github/intermediate-clojure-workshop/content/async/albums_stream.org::*Solution][Solution:2]]
 (defonce counter (atom 0))
 (def observing-mapper (map (fn [e]
                              (swap! counter inc)
@@ -19,15 +19,16 @@
 
 (defonce generator-loop
   (go-loop [stream (data-gen/get-albums-xs)]
-    #_("Introduce an appropriate delay")
+    ; FIXME
+    ; (a/<! (a/timeout 250))
     (if-not @quit?
       (do
         (if @enabled?
-          (a/>! in-ch #_(FIXME stream) :dummy))
-        (recur #_(FIXME stream) :dummy)))))
+          (a/>! in-ch (first stream)))
+        (recur (rest stream))))))
 
 (defn enable-stream! []
   (reset! enabled? true))
 (defn disable-stream! []
   (reset! enabled? false))
-;; Outline:2 ends here
+;; Solution:2 ends here

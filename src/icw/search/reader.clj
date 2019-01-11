@@ -9,33 +9,40 @@
            [org.apache.lucene.util QueryBuilder]))
 ;; Code Template:1 ends here
 
-;; [[file:~/github/intermediate-clojure-workshop/content/search/reader.org::*Outline][Outline:1]]
-(defn ^IndexReader index-reader [^Directory directory])
+;; [[file:~/github/intermediate-clojure-workshop/content/search/reader.org::*Solution][Solution:1]]
+(defn index-reader [directory]
+  (DirectoryReader/open directory))
 
-(defn ^IndexSearcher searcher [^Directory directory])
+(defn searcher [directory]
+  (IndexSearcher. (index-reader directory)))
 
-(defn field->kv [^Field f])
+(defn field->kv [f]
+  [(-> f .name keyword)
+   (.stringValue f)])
 
-(defn doc->map [^Document doc])
+(defn doc->map [d]
+  (into
+   {}
+   (map field->kv d)))
 
-(defn ^Query query [^clojure.lang.Keyword field
-                    ^String term
-                    ^Analyzer analyzer])
+(defn query [field term analyzer]
+  (let [qb (QueryBuilder. analyzer)
+        field (name field)]
+    (. qb
+       (createBooleanQuery field term))))
 
-(defn score-docs->ids [^"[Lorg.apache.lucene.search.ScoreDoc;" score-docs])
+(defn score-docs->ids [^"[Lorg.apache.lucene.search.ScoreDoc;" score-docs]
+  (map (fn [score-doc] (.doc score-doc)) score-docs))
 
-(defn doc-ids->docs [^IndexSearcher searcher doc-ids])
+(defn doc-ids->docs [searcher doc-ids]
+  (map (fn [doc-id] (.doc searcher doc-id)) doc-ids))
 
-; Create IndexSearcher given the index (Directory instance)
-; Create a Query object given the field, term and analyzer
-; .search on the IndexSearcher the generated Query
-; Get .scoreDocs from the response
-;  ScoreDoc instances give you document-ids as handles
-;  Using the document-ids, get the Document instances from the IndexSearcher
-; Convert the collection to maps with doc->map
-;  Enjoy the convenience of Clojure's support for Iterable
-(defn search [^Directory directory
-              ^clojure.lang.Keyword field
-              ^String search-term
-              ^Analyzer analyzer])
-;; Outline:1 ends here
+(defn search [directory field search-term analyzer]
+  (let [q (query field search-term analyzer)
+        searcher (searcher directory)
+        search-results (.search searcher q 10)
+        score-docs (.scoreDocs search-results)
+        doc-ids (score-docs->ids score-docs)
+        docs (doc-ids->docs searcher doc-ids)]
+    (map doc->map docs)))
+;; Solution:1 ends here
