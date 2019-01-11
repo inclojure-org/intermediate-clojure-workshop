@@ -62,16 +62,24 @@
   ; We need two go processes
   ; 1. One that tracks consumption and burst-rate limits
   ; 2. The other processes messages per the policy
-  (start! [_])
+  (start! [_]
+    (go-loop []
+      #_("A periodic process that increments tokens"))
+    (go-loop [#_v #_("read a message")]
+      "If we have capacity process, else simply pass on to the output channel"
+      (recur #_("read next message if no shutdown signal"))))
 
   ; Policy change at run-time
   ; This needs to be conveyed to the go-blocks
   ;  which help us conform to policy
-  (modify-burst! [this new-burst-count])
+  (modify-burst! [this new-burst-count]
+    #_("update the burst-count")
+    #_("update tokens available"))
 
   ; Stop all transformation
   ; Signal the go-block logic to clamp down on transformations.
-  (zero! [this])
+  (zero! [this]
+    #_("special case of modify-burst! Is it?"))
 
   ; Stop the go blocks.
   ; How do we communicate with the go-blocks started in another place?
