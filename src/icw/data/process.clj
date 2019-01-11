@@ -29,14 +29,20 @@
    \"Rock\"
    [\"Rock & Roll\" \"Psychedelic Rock\"]"
   [line]
-  )
+  (let [line-v (-> line
+                   csv/read-csv
+                   first)
+        subgenres (-> (last line-v)
+                      csv/read-csv)]
+    (concat (butlast line-v)
+            subgenres)))
 
 
 (comment
-  (= (parse-line "1,1967,Sgt. Pepper's Lonely Hearts Club Band,The Beatles,Rock,\"Rock & Roll, Psychedelic Rock\"")
+  (= (parse-line "1,1967,Sgt. Pepper's Lonely Hearts Club Band,The Beatles,Rock,\"Rock & Roll,Psychedelic Rock\"")
      ["1"
       "1967"
-      "Sgt. Pepper's Lonely Hearts Club BandThe Beatles"
+      "Sgt. Pepper's Lonely Hearts Club Band"
       "The Beatles"
       "Rock"
       ["Rock & Roll"
@@ -57,13 +63,19 @@
   Output
   {:number \"1\"
    :year \"1967\"
-  :artist \"The beatles\"p
+   :artist \"The beatles\"
    :album \"Sgt. Pepper's Lonely Hearts Club BandThe Beatles\"
    :genre \"Rock\"
    :subgenre-xs [\"Rock & Roll\"
                  \"Psychedelic Rock\"]}"
   [xs]
-  )
+  (let [[number year album artist genre subgenre] xs]
+    {:number number
+     :year year
+     :artist artist
+     :album album
+     :genre genre
+     :subgenre subgenre}))
 
 (comment
   (= (line-vec->line-map ["1"
@@ -81,18 +93,17 @@
       :subgenre ["Rock & Roll"
                  "Psychedelic Rock"]}))
 
-(comment
-  (take 10
-        (map #_FIXME
-             (map #_FIXME
-                  album-lines))))
-
 
 (defn line-xs->album-xs
   [line-xs]
   ;; Use parse-line to convert list of strings to list of vectors
   ;; Use line-vec->line-map to convert list of vectors to list of map
-  )
+  (map line-vec->line-map
+       (map parse-line
+            line-xs)))
+
+
+(comment (take 1 (line-xs->album-xs album-lines)))
 
 (defn populate-db
   []
@@ -125,14 +136,15 @@
 
 (defn line-xs->albums-xs-before
   "Lists all albums before 'year'"
-  [line-xs year]
-  (comment (filter #_FIXME
-                   (map #_FIXME
-                        #_FIXME))))
+  [year line-xs]
+  (filter #(< (:year %) year)
+          (map (fn [album]
+                 (update-in album [:year] #(Integer/parseInt %)))
+               line-xs)))
 
 (comment (= (take 5 (map (juxt :year :album)
                          (line-xs->albums-xs-before 1987
-                                                    album-lines)))
+                                                    (line-xs->album-xs album-lines))))
             '([1967 "Sgt. Pepper's Lonely Hearts Club Band"]
               [1966 "Pet Sounds"]
               [1966 "Revolver"]
@@ -165,11 +177,13 @@
 (defn find-popular-year
   ;; Find top years for album releases
   [line-xs]
-  (sort-by #_FIXME
-           (reduce #_FIXME
-                   {}
-                   (map #_ME
-                        line-xs))))
+  (sort-by (comp - second)
+           (frequencies (map :year
+                             (map line-xs->album-xs
+                                  line-xs)))))
+
+(take 5 (map line-xs->album-xs
+             album-lines))
 
 (comment (= (take 5 (find-popular-year album-lines))
             '(["1970" 26]
@@ -205,7 +219,7 @@
 data-gen/get-albums-xs
 
 ;; DONT evaluate the function in REPL it's a lazy sequence.
-;; It's a list of albums generated from 2040 till infinity
+;; It's a list of albums generated from year 2040 till infinity
 
 (take 10 (data-gen/get-albums-xs))
 
@@ -220,18 +234,33 @@ data-gen/get-albums-xs
 (comment
   ;; This will evaluate for infinity since filter does not stop evaluation
   ;; We will just get infinite list of nils after year 2045
-  (line-xs->albums-xs-before (data-gen/get-albums-xs)
-                             2045))
+  (line-xs->albums-xs-before 2045
+                             (data-gen/get-albums-xs)))
 
 
 ;; https://clojure.org/api/cheatsheet
-;; Espeically look for seq in and seq out
+;; Especially look for seq in and seq out
 
-(#_FIXME identity
-         (line-xs->albums-xs-before (data-gen/get-albums-xs)
-                                    2045))
+(defn albums-until-year
+  [year]
+  (take-while identity
+              (line-xs->albums-xs-before year
+                                         (line-xs->album-xs
+                                          (take 1 (data-gen/get-albums-xs))))))
+
+(comment
+  (take 10 (albums-until-year 2041)))
 
 ;; Try applying functions we have created till now
+
+(comment
+  (-> 2045
+      albums-until-year
+      find-popular-year
+      (take 10)))
+
+(comment
+  (find-popular-artists (until-year 2045)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
