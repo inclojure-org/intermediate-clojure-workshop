@@ -27,5 +27,4 @@
                  [org.apache.lucene/lucene-queryparser ~lucene-version]
                  [org.apache.lucene/lucene-analyzers-common ~lucene-version]]
 
-  :profiles {:dev {:dependencies [[integrant/repl "0.3.1"]]}}
-  :aot [icw.core])
+  :profiles {:dev {:dependencies [[integrant/repl "0.3.1"]]}})

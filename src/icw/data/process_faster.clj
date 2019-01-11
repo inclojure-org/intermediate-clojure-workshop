@@ -198,14 +198,15 @@ x
 ;; Another good use case is to convert an thread unsafe API into a
 ;; thread safe one
 
-(defn thread-unsafe-api
-  [a x]
-  (println "Thread unsafe API - " x)
-  x)
+(comment
+  (defn thread-unsafe-api
+    [a x]
+    (println "Thread unsafe API - " x)
+    x)
 
-(def api-agent (agent "Message"))
+  (def api-agent (agent "Message"))
 
-(send api-agent thread-unsafe-api "New message")
+  (send api-agent thread-unsafe-api "New message"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
