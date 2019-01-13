@@ -33,10 +33,10 @@
 
 
 (comment
-  (= (parse-line "1,1967,Sgt. Pepper's Lonely Hearts Club Band,The Beatles,Rock,\"Rock & Roll, Psychedelic Rock\"")
+  (= (parse-line "1,1967,Sgt. Pepper's Lonely Hearts Club Band,The Beatles,Rock,\"Rock & Roll,Psychedelic Rock\"")
      ["1"
       "1967"
-      "Sgt. Pepper's Lonely Hearts Club BandThe Beatles"
+      "Sgt. Pepper's Lonely Hearts Club Band"
       "The Beatles"
       "Rock"
       ["Rock & Roll"
@@ -57,18 +57,24 @@
   Output
   {:number \"1\"
    :year \"1967\"
-  :artist \"The beatles\"p
-   :album \"Sgt. Pepper's Lonely Hearts Club BandThe Beatles\"
+   :artist \"The beatles\"
+   :album \"Sgt. Pepper's Lonely Hearts Club Band\"
    :genre \"Rock\"
    :subgenre-xs [\"Rock & Roll\"
                  \"Psychedelic Rock\"]}"
   [xs]
-  )
+  (let [[id year album artist genre subgenre-xs] xs]
+    {:number id
+     :year year
+     :album album
+     :artist artist
+     :genre genre
+     :subgenre subgenre-xs}))
 
 (comment
   (= (line-vec->line-map ["1"
                          "1967"
-                          "Sgt. Pepper's Lonely Hearts Club BandThe Beatles"
+                          "Sgt. Pepper's Lonely Hearts Club Band"
                           "The Beatles"
                          "Rock"
                          ["Rock & Roll"
