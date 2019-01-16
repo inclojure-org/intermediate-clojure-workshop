@@ -66,6 +66,9 @@ Do note that you may need to use it in trial mode or get an appropriate license 
 
 ## Inspiring and insightful source code
 
+### [Clojure Core](https://github.com/clojure/clojure/tree/master/src/clj/clojure)
+This one is not a surprise, but reading sources in the core Clojure library (with the clojure.core namespace being a good starting point) is highly recommended. This one comes _directly_ from the masters, and it can not get more idiomatic (and simpler, really) than this.
+
 ### [Monger](https://github.com/michaelklishin/monger)
 
 Standard way of writing database wrappers. Monger uses official Java client for Mongo.
@@ -85,6 +88,15 @@ Carmine is Redis client and written almost from scratch.
 core.cache is Clojure contrib library. It provides in-memory implementations of different caching strategies
   - [core.cache/defcache](https://github.com/clojure/core.cache/blob/master/src/main/clojure/clojure/core/cache.clj#L67) is a macro that reduces repetition of defining a type
   - [This](https://github.com/clojure/core.cache/blob/master/src/main/clojure/clojure/core/cache.clj#L224) shows that mutation to cache creates a new value
+
+### [clucy](https://github.com/weavejester/clucy/blob/master/src/clucy/core.clj)
+This one is old, but it really stands out for a few reasons as far as learning goes
+  - A concise example that shows Java inter-op
+  - Careful design considerations, and thus what a succinct piece of code within a single namespace can achieve.
+  - Clever use of `meta` attributes on `vars`.
+
+### [Durable Queue](https://github.com/Factual/durable-queue)
+This one pushes some limits on Clojure-Java interop without descending down into Java (language) land. An instructive piece of source, all within a single namespace. 
 
 ## Links
   - [Clojure ground up](https://aphyr.com/tags/Clojure-from-the-ground-up))
