@@ -71,15 +71,15 @@ This one is not a surprise, but reading sources in the core Clojure library (wit
 
 ### [Monger](https://github.com/michaelklishin/monger)
 
-Standard way of writing database wrappers. Monger uses official Java client for Mongo.
+Monger uses official Java client for talking with Mongo. This is a standard way of writing database wrappers.
 Few interesting parts,
   - [monger.query/exec](https://github.com/michaelklishin/monger/blob/master/src/clojure/monger/query.clj#L87) uses doto to run a bunch of Java methods
-  -  [monger.query/exec](https://github.com/michaelklishin/monger/blob/master/src/clojure/monger/query.clj#L87) also uses Protocols [monger.conversion/ConvertToDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L52) and [monger.conversion/ConvertFromDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L108) to convert objects at boundry. Monger tries to convert mutable structures List/DBList to Clojure vectors.
+  -  [monger.query/exec](https://github.com/michaelklishin/monger/blob/master/src/clojure/monger/query.clj#L87) also uses Protocols [monger.conversion/ConvertToDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L52) and [monger.conversion/ConvertFromDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L108) to convert objects at boundary. Monger converts mutable data List/DBList to Clojure vectors.
 
 ### [Carmine](https://github.com/ptaoussanis/carmine)
-Carmine is Redis client and written almost from scratch.
-  - API is built with [macro](https://github.com/ptaoussanis/carmine/blob/master/src/taoensso/carmine.clj#L21)
-  - Atom is used to collect [test](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/test/taoensso/carmine/tests/main.clj#L249) results
+Carmine is Redis client and is written almost from scratch.
+  - API is built with a [macro](https://github.com/ptaoussanis/carmine/blob/master/src/taoensso/carmine.clj#L21)
+  - An atom is used to collect [test](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/test/taoensso/carmine/tests/main.clj#L249) results
     - Exercise - Can we use core.async here to remove dependency on Thread/sleep?
   - It uses [IConnectionPool](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/src/taoensso/carmine/connections.clj#L42) to create different implementations of connection pool
   - It uses a [edn file](https://github.com/ptaoussanis/carmine/blob/7d0e6f054a42473af4c513869491b752567f3cec/src/commands.edn) to map list of commands Redis supports to Carmine API functions using [defcommands macro](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/src/taoensso/carmine/commands.clj#L275)
@@ -92,11 +92,11 @@ core.cache is Clojure contrib library. It provides in-memory implementations of 
 ### [clucy](https://github.com/weavejester/clucy/blob/master/src/clucy/core.clj)
 This one is old, but it really stands out for a few reasons as far as learning goes
   - A concise example that shows Java inter-op
-  - Careful design considerations, and thus what a succinct piece of code within a single namespace can achieve.
-  - Clever use of `meta` attributes on `vars`.
+  - Careful design considerations, and thus what a succinct piece of code within a single namespace can achieve
+  - Clever use of `meta` attributes on `vars`
 
 ### [Durable Queue](https://github.com/Factual/durable-queue)
-This one pushes some limits on Clojure-Java interop without descending down into Java (language) land. An instructive piece of source, all within a single namespace. 
+This one pushes some limits on Clojure-Java interop without descending down into Java (language) land. An instructive piece of source, all within a single namespace.
 
 ## Links
   - [Clojure ground up](https://aphyr.com/tags/Clojure-from-the-ground-up))
