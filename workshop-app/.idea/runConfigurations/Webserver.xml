@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Webserver" type="ClojureScriptRunConfiguration" factoryName="Clojure Script">
+    <module name="workshop-app" />
+    <setting name="path" value="" />
+    <setting name="namespace" value="workshop-app.core" />
+    <setting name="execution" value="LEININGEN" />
+    <setting name="profiles" value="" />
+    <setting name="aliases" value="" />
+    <setting name="vmparams" value="" />
+    <setting name="params" value="" />
+    <setting name="workDir" value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>

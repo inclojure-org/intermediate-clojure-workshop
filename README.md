@@ -1,109 +1,55 @@
 # Clojure intermediate workshop
 
-# Setup Instructions
+## Setup instructions
 
-Just do the following one by one, and you should be fine.
+### Java 11
+You will need java to work with this workshop content.
 
-## Java 8
+First check if you have Java 11. You can do this by running the following command:
+`java -version`
 
-You will need Java to work with this Clojure workshop content.
+If Java is not installed please register at this link and download it for free from the following link.
+https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html
 
-First, make sure you have Java 8.
+You can verify that java has been installed properly by running the following command
+`java -version`
 
-  - Run `java -version` in your terminal.
-  - If Java is not installed, please [download and install Java 8 from here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
-  - Once you are done, `java -version` should show you a Java 1.8.x version.
+We have not tested this project with Java versions other than Java 11 hence it is highly recommended 
+that you have this one installed 
 
-Notes:
+### Leiningen
+Follow Leiningen setup instructions mentioned here: https://leiningen.org/
 
-  - If you have Java 9+, that should be OK too.
-  - The LightTable editor is known to break with Java 9. Use Java 8 if you are keen on using LightTable.
-  - We have not tested this project with Java 7 and earlier.
+Fire up a REPL by running the following command `lein repl`. This should give you a repl
+prompt. Enter `(+ 1 2)` and press enter. You should get back `3` as the result.
 
+Additionally run `lein --version` to ensure that the correct version of lein has been installed.
 
-## Leiningen
+This project is tested with Leiningen 2.9.1. It is highly recommended that you use the same version.
 
-Follow [Leiningen setup instructions here](https://leiningen.org/).
+**WARNING** This project will break with Leiningen 3.0.0 or higher
 
-### Fire up a REPL
+### Intellij
 
-  - Clone this project
-  - Open your terminal, and do the following.
-  - `cd` into this project's root directory
-  - Use `lein repl` command to start a REPL with Leiningen.
-  - Wait for it... the REPL will start and print out a message with some
-    useful information
-  - Locate the `port` and `host` information in the message. We will need this information soon.
+You can download Intellij by following the instructions here: https://www.jetbrains.com/idea/download/index.html
 
-Note:
+You are free to use the editor of your choice as long as you can do the following with it:
 
-  - [Boot](http://boot-clj.com/) should be fine too, but you may need to generate your own _boot_ file(s).
-
-
-## Code Editor and Tooling
-
-Set up an editor and figure out how to evaluate Clojure code with it.
-We are fine with you choosing the editor as long as your editor can do,
-
-  - Connect to a Clojure REPL from the editor
-    - Evaluate snippets and/or entire namespaces in the connected REPL from the editor.
-  - Code navigation
-  - Paredit / Parinfer
-
-Editors we can help out with
-  - Emacs
-  - Vim
-  - Cursive
+* Jump to definition for Clojure or Java sources
+* Start or connect to a REPL
+* Structural editing with paredit / parinfer
 
 
-### Cursive (IntelliJ)
-
-If you don't have an editor setup, we suggest you use Cursive with IntelliJ. Please follow instructions from [here](https://cursive-ide.com/userguide/).
-Do note that you may need to use it in trial mode or get an appropriate license ahead of time. There's a cost-free license available for personal/non-commercial hacking.
+We will be using Intellij + Cursive for this workshop hence it is highly recommended that you have it installed. For Intellij, 
+we recommend version 2019.3.2 or later.
 
 
-# Further reading
+### Cursive
 
-## Inspiring and insightful source code
+You can get started with Cursive by following the instructions here: https://cursive-ide.com/userguide/
 
-### [Clojure Core](https://github.com/clojure/clojure/tree/master/src/clj/clojure)
-This one is not a surprise, but reading sources in the core Clojure library (with the clojure.core namespace being a good starting point) is highly recommended. This one comes _directly_ from the masters, and it can not get more idiomatic (and simpler, really) than this.
 
-### [Monger](https://github.com/michaelklishin/monger)
+### Postman
+You can download Postman by following the instructions here: https://www.postman.com/downloads/
 
-Monger uses official Java client for talking with Mongo. This is a standard way of writing database wrappers.
-Few interesting parts,
-  - [monger.query/exec](https://github.com/michaelklishin/monger/blob/master/src/clojure/monger/query.clj#L87) uses doto to run a bunch of Java methods
-  -  [monger.query/exec](https://github.com/michaelklishin/monger/blob/master/src/clojure/monger/query.clj#L87) also uses Protocols [monger.conversion/ConvertToDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L52) and [monger.conversion/ConvertFromDBObject](https://github.com/michaelklishin/monger/blob/6bf528ed5b8a21153e3df1aa0cd1d88e08f31e3a/src/clojure/monger/conversion.clj#L108) to convert objects at boundary. Monger converts mutable data List/DBList to Clojure vectors.
-
-### [Carmine](https://github.com/ptaoussanis/carmine)
-Carmine is Redis client and is written almost from scratch.
-  - API is built with a [macro](https://github.com/ptaoussanis/carmine/blob/master/src/taoensso/carmine.clj#L21)
-  - An atom is used to collect [test](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/test/taoensso/carmine/tests/main.clj#L249) results
-    - Exercise - Can we use core.async here to remove dependency on Thread/sleep?
-  - It uses [IConnectionPool](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/src/taoensso/carmine/connections.clj#L42) to create different implementations of connection pool
-  - It uses a [edn file](https://github.com/ptaoussanis/carmine/blob/7d0e6f054a42473af4c513869491b752567f3cec/src/commands.edn) to map list of commands Redis supports to Carmine API functions using [defcommands macro](https://github.com/ptaoussanis/carmine/blob/d00b61afb25426c8ec44f24bf544ae85dc93a4af/src/taoensso/carmine/commands.clj#L275)
-
-### [core.cache](https://github.com/clojure/core.cache)
-core.cache is Clojure contrib library. It provides in-memory implementations of different caching strategies
-  - [core.cache/defcache](https://github.com/clojure/core.cache/blob/master/src/main/clojure/clojure/core/cache.clj#L67) is a macro that reduces repetition of defining a type
-  - [This](https://github.com/clojure/core.cache/blob/master/src/main/clojure/clojure/core/cache.clj#L224) shows that mutation to cache creates a new value
-
-### [clucy](https://github.com/weavejester/clucy/blob/master/src/clucy/core.clj)
-This one is old, but it really stands out for a few reasons as far as learning goes
-  - A concise example that shows Java inter-op
-  - Careful design considerations, and thus what a succinct piece of code within a single namespace can achieve
-  - Clever use of `meta` attributes on `vars`
-
-### [Durable Queue](https://github.com/Factual/durable-queue)
-This one pushes some limits on Clojure-Java interop without descending down into Java (language) land. An instructive piece of source, all within a single namespace.
-
-## Links
-  - [Clojure ground up](https://aphyr.com/tags/Clojure-from-the-ground-up))
-  - [Clojure toolbox - list of clojure projects/libraries](https://www.clojure-toolbox.com)
-
-## Copyright and License
-
-Copyright � 2018-2019 [IN/Clojure](https://inclojure.org/).
-
-Distributed under the [MIT license](https://github.com/inclojure-org/clojure-by-example/blob/master/LICENSE).
+The recommended version of Postman is 7.17 or later

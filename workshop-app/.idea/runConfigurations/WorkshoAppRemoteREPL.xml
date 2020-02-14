@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WorkshoAppRemoteREPL" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+    <module name="workshop-app" />
+    <setting name="host" value="" />
+    <setting name="port" value="0" />
+    <setting name="replType" value="NREPL" />
+    <setting name="configType" value="PORT_FILE" />
+    <setting name="fixLineNumbers" value="false" />
+    <method v="2" />
+  </configuration>
+</component>

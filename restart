@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+level=${1:-1}
+echo $level > .current_level
+echo "Resetting to save point:" $level
+# if [ -f ./workshop-app/target/ ]
+# then
+#   rm -r ./workshop-app/target/
+# fi
+
+# if [ -f ./workshop-app/.nrepl-port ]
+# then
+#   rm -r ./workshop-app/.nrepl-port
+# fi
+
+
+# if [ -f ./workshop-app/prod_database_1.sqlite ]
+# then
+#   rm ./workshop-app/prod_database_1.sqlite
+# fi
+
+# backing your solution
+# mkdir -p ./your-solutions/$level/src/ ./your-solutions/$level/test/
+# cp -R ./workshop-app/src/ ./your-solutions/$level/src/
+# cp -R ./workshop-app/test/ ./your-solutions/$level/test/
+
+rm -r ./workshop-app/src/ ./workshop-app/test/
+mkdir -p ./workshop-app/src/ ./workshop-app/test/
+
+cp -R ./save-points/$level/src/ ./workshop-app/src/
+if [ -d ./save-points/$next_level/test/ ]
+then
+    cp -R ./save-points/$next_level/test/ ./workshop-app/test/
+fi

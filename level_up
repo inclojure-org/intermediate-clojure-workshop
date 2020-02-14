@@ -1,0 +1,41 @@
+#!/bin/bash
+total_chapters=10
+if [ -f .current_level ]
+then
+  current_level=$(<.current_level)
+else
+  current_level=1
+fi
+
+next_level=$[(current_level%total_chapters)+1]
+echo $next_level > .current_level
+echo "Moving to savepoint:" $next_level
+
+# if [ -f ./workshop-app/target/ ] 
+# then
+#   rm -r ./workshop-app/target/
+# fi
+
+# if [ -f ./workshop-app/.nrepl-port ] 
+# then
+#   rm -r ./workshop-app/.nrepl-port 
+# fi
+
+# if [ -f ./workshop-app/prod_database_1.sqlite ] 
+# then
+#   rm ./workshop-app/prod_database_1.sqlite
+# fi
+
+## backing your solution
+# mkdir -p ./your-solutions/$current_level/src/ ./your-solutions/$current_level/test/
+# cp -R ./workshop-app/src/ ./your-solutions/$current_level/src/
+# cp -R ./workshop-app/test/ ./your-solutions/$current_level/test/
+
+rm -r ./workshop-app/src/ ./workshop-app/test/
+mkdir -p ./workshop-app/src/ ./workshop-app/test/
+
+cp -R ./save-points/$next_level/src/ ./workshop-app/src/
+if [ -d ./save-points/$next_level/test ]
+then
+    cp -R ./save-points/$next_level/test/ ./workshop-app/test/
+fi

@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "1ffbb028-fcfa-4f2b-bb2a-6eac2c49d627",
+		"name": "Inclojure workshop collection",
+		"description": "Collection for inclojure 2020 workshop. This collection will assist us in building the REST API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hello world",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535?name=Joel&surname=Victor",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"query": [
+						{
+							"key": "name",
+							"value": "Joel"
+						},
+						{
+							"key": "surname",
+							"value": "Victor"
+						}
+					]
+				},
+				"description": "Query our hello world web server."
+			},
+			"response": []
+		},
+		{
+			"name": "Create a user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535/joel?dob=2000-01-01",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"path": [
+						"joel"
+					],
+					"query": [
+						{
+							"key": "dob",
+							"value": "2000-01-01"
+						}
+					]
+				},
+				"description": "Given a name and an age create an entry in the backend."
+			},
+			"response": []
+		},
+		{
+			"name": "Get details about a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535/joel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"path": [
+						"joel"
+					]
+				},
+				"description": "Get details for a given user."
+			},
+			"response": []
+		},
+		{
+			"name": "Update a user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535/joel?dob=2001-01-01",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"path": [
+						"joel"
+					],
+					"query": [
+						{
+							"key": "dob",
+							"value": "2001-01-01"
+						}
+					]
+				},
+				"description": "For a given user update his dob."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a given user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535/joel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"path": [
+						"joel"
+					]
+				},
+				"description": "Delete the user. We don't want to be liable #gdpr."
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65535/joel/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65535",
+					"path": [
+						"joel",
+						""
+					]
+				},
+				"description": "Any request with a trailing slash."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
