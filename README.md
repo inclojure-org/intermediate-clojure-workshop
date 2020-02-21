@@ -1,5 +1,23 @@
 # Clojure intermediate workshop
 
+## Introduction
+The project aims to introduce you to a few concepts of Clojure and it's
+tooling. It will equip you with knowledge and skills to write a REST API
+service in Clojure.
+
+
+## Levels
+The project has different levels (chapters) each focusing on a particular area. You can switch to different levels by,
+```
+./level_up
+```
+
+You can start over again from
+```
+./restart
+```
+
+
 ## Setup instructions
 
 ### Java 11
@@ -14,8 +32,8 @@ https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655
 You can verify that java has been installed properly by running the following command
 `java -version`
 
-We have not tested this project with Java versions other than Java 11 hence it is highly recommended 
-that you have this one installed 
+We have not tested this project with Java versions other than Java 11 hence it is highly recommended
+that you have this one installed
 
 ### Leiningen
 Follow Leiningen setup instructions mentioned here: https://leiningen.org/
@@ -40,7 +58,7 @@ You are free to use the editor of your choice as long as you can do the followin
 * Structural editing with paredit / parinfer
 
 
-We will be using Intellij + Cursive for this workshop hence it is highly recommended that you have it installed. For Intellij, 
+We will be using Intellij + Cursive for this workshop hence it is highly recommended that you have it installed. For Intellij,
 we recommend version 2019.3.2 or later.
 
 
@@ -53,3 +71,16 @@ You can get started with Cursive by following the instructions here: https://cur
 You can download Postman by following the instructions here: https://www.postman.com/downloads/
 
 The recommended version of Postman is 7.17 or later
+
+
+# Credits
+  - [Joel Victor](https://github.com/joel-victor) and [Kapil Reddy](https://github.com/kapilreddy) for course design and being the core teaching staff at the second edition of this workshop at IN/Clojure 2020.
+  - [Ravindra Jaju](https://github.com/jaju) and [Kapil Reddy] (https://github.com/kapilreddy) for course design and being the core teaching staff at the second edition of this workshop at IN/Clojure 2019.
+  - All the workshop participants, and the many Clojurists who generously donated their time to make it successful.
+  - [inclojure-org](https://github.com/inclojure-org) for being the umbrella under which this work happened.
+
+## Copyright and License
+
+Copyright © 2017-2018 [IN/Clojure](http://inclojure.org/).
+
+Distributed under the [MIT license](https://github.com/inclojure-org/clojure-by-example/blob/master/LICENSE).
